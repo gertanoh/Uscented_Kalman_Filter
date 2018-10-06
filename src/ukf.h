@@ -31,6 +31,7 @@ public:
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
 
+
   ///* time when the state is true, in us
   long long time_us_;
 
@@ -45,6 +46,11 @@ public:
 
   ///* Laser measurement noise standard deviation position2 in m
   double std_laspy_;
+	
+	// Laser noise matrix
+	MatrixXd R_lidar;
+	
+	double nis_lidar;
 
   ///* Radar measurement noise standard deviation radius in m
   double std_radr_;
@@ -55,6 +61,9 @@ public:
   ///* Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
+	MatrixXd R_radar;
+	double nis_radar;
+	
   ///* Weights of sigma points
   VectorXd weights_;
 
@@ -67,6 +76,10 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+	
+	// number of sigma points
+	int n_sigma_points;
+	
 
   /**
    * Constructor
@@ -102,6 +115,11 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+	
+private:
+	
+	void unscentedTransform(MatrixXd& X_sig_aug);
+	void updateStep(const MatrixXd& Z, const VectorXd& z, const MatrixXd& R, double& nis, bool is_radar);
 };
 
 #endif /* UKF_H */
