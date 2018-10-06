@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 cols = ['x']
 
 # Normalized innovation squared (NIS) data values for radar and laser measurements
-dataRadar = pandas.read_csv("nis_radar.csv", sep=',', usecols=[0], skiprows=1, names=cols)
-dataLaser = pandas.read_csv("nis_lidar.csv", sep=',', usecols=[0], skiprows=1, names=cols)
+dataRadar = pandas.read_csv("nis_radar.csv", sep=',', usecols=[0], skiprows=[1], names=cols)
+dataLaser = pandas.read_csv("nis_lidar.csv", sep=',', usecols=[0], skiprows=[1], names=cols)
 
 dataRadar = dataRadar[cols[0]]
 dataLaser = dataLaser[cols[0]]
@@ -19,7 +19,7 @@ dataLaser = dataLaser[cols[0]]
 
 # This serves as a check on our choice of process noise values.
 confidence95Radar = 7.82
-
+confidence35Radar = 0.35
 # Laser measurements have 2 degrees of freedom,
 # so the threshold is different.
 confidence95Laser = 5.99
@@ -27,11 +27,11 @@ confidence95Laser = 5.99
 
 n_confidence = 0
 for i in range(len(dataRadar)):
-	if dataRadar[i] > confidence95Radar:		
+	if dataRadar[i] <= confidence95Radar and dataRadar[i] >= confidence35Radar:		
 		n_confidence += 1
 		
 
-print("Radar NIS outside 95 interval: ", n_confidence * 100 / len(dataRadar))
+print("Radar NIS inside interval: ", n_confidence * 100 / len(dataRadar))
 
 n_confidence = 0
 for i in range(len(dataLaser)):
