@@ -44,9 +44,7 @@ UKF::UKF() {
   std_radrd_ = 0.3;
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
   
-	
-	
-
+		
   n_x_ = 5;
   n_aug_ = n_x_ + 2;
   lambda_ = 3 - n_aug_;
@@ -97,10 +95,7 @@ UKF::UKF() {
   R_radar << std_radr_*std_radr_, 0.0, 0.0,
               0.0, std_radphi_*std_radphi_, 0.0,
               0.0, 0.0, std_radrd_*std_radrd_;
-							
-							
-
-	
+										
 	time_us_ = 0;
 	
 	nis_lidar = 0.0;
@@ -110,9 +105,6 @@ UKF::UKF() {
 
 
 UKF::~UKF() {}
-
-
-
 
 static void angle_trunc(double& yaw)
 {
@@ -128,9 +120,6 @@ static void angle_trunc(double& yaw)
   };
     
 }
-
-
-
 /**
  * @param {MeasurementPackage} meas_package The latest measurement data of
  * either radar or laser.
@@ -193,9 +182,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	else if (meas_package.sensor_type_ == MeasurementPackage::LASER && use_laser_)
 	{
 		UpdateLidar(meas_package);
-	}
-		
-	
+	}	
 }
 
 /**
@@ -273,8 +260,7 @@ void UKF::Prediction(double delta_t) {
 		angle_trunc(tmp(3));
 		P_ = P_ + weights_(i) * tmp * tmp.transpose();
 	}
-	
-	
+		
 }
 
 /**
@@ -289,9 +275,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	
 		
 	VectorXd z(2);
-	z << meas_package.raw_measurements_(0), meas_package.raw_measurements_(1);
-	
-	
+	z << meas_package.raw_measurements_(0), meas_package.raw_measurements_(1);		
 	updateStep(Z, z, R_lidar, nis_lidar, false);
 }
 
@@ -339,8 +323,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	
 }
 
-
-
 /*
  * Perform Update step 
  * independently of the 
@@ -348,9 +330,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
  */
 
 void UKF::updateStep(const MatrixXd& Z, const VectorXd& z, const MatrixXd& R, double& nis, bool is_radar)
-{
-	
-	
+{		
 	MatrixXd Z_mean = Z * weights_;
 	
 	MatrixXd S(z.rows(), z.rows());
@@ -424,9 +404,6 @@ void UKF::unscentedTransform(MatrixXd& X_sig_aug)
 	P_aug(n_x_, n_x_) = std_a_ * std_a_;
 	P_aug(n_x_+1, n_x_+1) = std_yawdd_ * std_yawdd_;
 
-	
-	
-	
 	MatrixXd Sqrt_of_P = P_aug.llt().matrixL();
 	
 	double coefficient = sqrt(n_aug_ + lambda_);
@@ -437,8 +414,5 @@ void UKF::unscentedTransform(MatrixXd& X_sig_aug)
 	{
 		X_sig_aug.col(i+1) = x_aug + coefficient * Sqrt_of_P.col(i);
 		X_sig_aug.col(i+n_aug_+1) = x_aug - coefficient * Sqrt_of_P.col(i);
-	}
-	
-	
-	
+	}	
 }
