@@ -47,26 +47,26 @@ UKF::UKF() {
 	
 	
 
-	n_x_ = 5;
-	n_aug_ = n_x_ + 2;
-	lambda_ = 3 - n_aug_;
-	
-	n_sigma_points = 2 * n_aug_ + 1;
+  n_x_ = 5;
+  n_aug_ = n_x_ + 2;
+  lambda_ = 3 - n_aug_;
+
+  n_sigma_points = 2 * n_aug_ + 1;
 	
 	// initial state vector
   x_ = VectorXd(n_x_);
-	x_ << 0.0, 0.0, 0.0, 0.0, 0.0;
+  x_ << 0.0, 0.0, 0.0, 0.0, 0.0;
 	
   // initial covariance matrix
 	// I noticed that the values used to init the covariance
 	// impact the covergence of the matrix
 	// with 1000 on v, yaw and yaw_rate, the algo diverges
   P_ = MatrixXd(n_x_, n_x_);
-	P_ << 0.5, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.5, 0.0, 0.0, 0.0,
-				0.0, 0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 1.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 1.0;
+  P_ << 0.5, 0.0, 0.0, 0.0, 0.0,
+        0.0, 0.5, 0.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 0.0, 1.0;
 	
 	Xsig_pred_ = MatrixXd(n_x_, n_sigma_points);
 
@@ -79,8 +79,7 @@ UKF::UKF() {
 	
 	for (int i = 1; i < n_sigma_points; ++i)
 	{
-		weights_(i) = 0.5 / denominator;
-		
+    weights_(i) = 0.5 / denominator;		
 	}
 	
 	
@@ -92,12 +91,12 @@ UKF::UKF() {
 
   //measurement covariance matrix - laser
   R_lidar << std_laspx_*std_laspx_, 0.0,
-							0.0, std_laspy_*std_laspy_;
+              0.0, std_laspy_*std_laspy_;
 
   //measurement covariance matrix - radar
   R_radar << std_radr_*std_radr_, 0.0, 0.0,
-							0.0, std_radphi_*std_radphi_, 0.0,
-							0.0, 0.0, std_radrd_*std_radrd_;
+              0.0, std_radphi_*std_radphi_, 0.0,
+              0.0, 0.0, std_radrd_*std_radrd_;
 							
 							
 
@@ -411,9 +410,7 @@ void UKF::updateStep(const MatrixXd& Z, const VectorXd& z, const MatrixXd& R, do
 
 void UKF::unscentedTransform(MatrixXd& X_sig_aug)
 {
-	
-	
-	
+			
 	VectorXd x_aug = VectorXd(n_aug_);
 	
 	x_aug.head(n_x_) = x_;
